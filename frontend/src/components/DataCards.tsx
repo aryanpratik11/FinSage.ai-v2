@@ -1,5 +1,14 @@
-import { ArrowDownRight, ArrowUpRight, Award, Landmark, PiggyBank, Target } from "lucide-react";
-import type { CompareData, FundData, GoalData, ProjectionData, StockData, ToolData } from "@/lib/api";
+import { ArrowDownRight, ArrowUpRight, Award, CircleCheck, Landmark, ListChecks, PiggyBank, Target, TriangleAlert } from "lucide-react";
+import type {
+  CompareData,
+  FundData,
+  GoalData,
+  ProjectionData,
+  ReportData,
+  ScorecardPillar,
+  StockData,
+  ToolData,
+} from "@/lib/api";
 import { formatINR, formatINRCompact, formatPct, formatPrice, formatRatio, titleCase } from "@/lib/format";
 import { Sparkline } from "./Sparkline";
 
@@ -83,8 +92,133 @@ function StockCard({ d }: { d: StockData }) {
           <Metric label="Div. yield" value={formatPct(d.dividend_yield_pct, 2)} />
         </dl>
       )}
-      {isIndex && <div className="h-3" />}
+      {(d.vs_dma200_pct != null || d.volatility_pct != null) && (
+        <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-forest-900/5 px-4 py-2.5 text-[11px] text-forest-800/60">
+          {d.vs_dma200_pct != null && (
+            <span>
+              vs 200-day avg <Signed value={d.vs_dma200_pct} />
+            </span>
+          )}
+          {d.vs_dma50_pct != null && (
+            <span>
+              vs 50-day avg <Signed value={d.vs_dma50_pct} />
+            </span>
+          )}
+          {d.from_52w_high_pct != null && (
+            <span>
+              from 52W high <Signed value={d.from_52w_high_pct} />
+            </span>
+          )}
+          {d.volatility_pct != null && (
+            <span>
+              volatility <span className="font-mono font-semibold text-forest-900">{formatPct(d.volatility_pct, 0)}</span>
+            </span>
+          )}
+        </div>
+      )}
+      {isIndex && <div className="h-1" />}
     </Shell>
+  );
+}
+
+function Signed({ value }: { value: number }) {
+  return (
+    <span className={`font-mono font-semibold ${value >= 0 ? "text-brand-700" : "text-red-600"}`}>
+      {formatPct(value, 1, true)}
+    </span>
+  );
+}
+
+const TONE: Record<ScorecardPillar["tone"], { chip: string; dot: string }> = {
+  good: { chip: "bg-brand-50 text-brand-800 ring-brand-200", dot: "bg-brand-500" },
+  neutral: { chip: "bg-gold-300/25 text-amber-900 ring-gold-300", dot: "bg-gold-400" },
+  bad: { chip: "bg-red-50 text-red-800 ring-red-200", dot: "bg-red-500" },
+  na: { chip: "bg-forest-900/5 text-forest-800/60 ring-forest-900/10", dot: "bg-forest-800/30" },
+};
+
+function ReportCard({ r }: { r: ReportData }) {
+  const { scorecard, financials, peers } = r;
+  const years = financials.annual ?? [];
+  const maxRevenue = Math.max(...years.map((y) => y.revenue), 1);
+  return (
+    <>
+      <StockCard d={r.snapshot} />
+      <Shell>
+        <div className="flex flex-wrap items-baseline justify-between gap-2 px-4 pt-4">
+          <p className="flex items-center gap-2 font-semibold text-forest-950">
+            <ListChecks className="h-4 w-4 text-brand-600" /> FinSage scorecard
+          </p>
+          <p className="text-[11px] text-forest-800/50">Rule-based screen · not a recommendation</p>
+        </div>
+        <div className="grid gap-2 p-4 sm:grid-cols-2">
+          {scorecard.pillars.map((p) => (
+            <div key={p.name} className="rounded-xl bg-forest-900/[0.02] p-3 ring-1 ring-forest-900/5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-forest-800/60">{p.name}</span>
+                <span className={`flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ${TONE[p.tone].chip}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${TONE[p.tone].dot}`} /> {p.label}
+                </span>
+              </div>
+              <ul className="mt-2 space-y-1 text-[12px] leading-5 text-forest-800/75">
+                {p.points.map((pt) => (
+                  <li key={pt}>{pt}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-forest-900/5 px-4 py-3">
+          {scorecard.red_flags.length ? (
+            <ul className="space-y-1">
+              {scorecard.red_flags.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-[12px] text-red-800">
+                  <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-500" /> {f}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="flex items-center gap-2 text-[12px] text-brand-800">
+              <CircleCheck className="h-3.5 w-3.5 text-brand-600" /> No red flags on these checks
+            </p>
+          )}
+        </div>
+
+        {years.length > 1 && (
+          <div className="border-t border-forest-900/5 px-4 py-3">
+            <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-[11px] text-forest-800/55">
+              <span className="font-semibold uppercase tracking-wider">Revenue &amp; net profit</span>
+              <span>
+                {financials.revenue_cagr_pct != null && <>Revenue {formatPct(financials.revenue_cagr_pct, 1, true)}/yr · </>}
+                {financials.profit_cagr_pct != null && <>Profit {formatPct(financials.profit_cagr_pct, 1, true)}/yr</>}
+              </span>
+            </div>
+            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${years.length}, minmax(0, 1fr))` }}>
+              {years.map((y) => (
+                <div key={y.fy} className="flex flex-col items-center gap-1">
+                  <div className="flex h-16 w-full items-end justify-center gap-1">
+                    <div className="w-3 rounded-t bg-forest-900/20" style={{ height: `${((y.revenue / maxRevenue) * 100).toFixed(1)}%` }} title={`Revenue ${formatINRCompact(y.revenue)}`} />
+                    <div
+                      className={`w-3 rounded-t ${y.net_income >= 0 ? "bg-brand-500" : "bg-red-400"}`}
+                      style={{ height: `${((Math.abs(y.net_income) / maxRevenue) * 100).toFixed(1)}%` }}
+                      title={`Net profit ${formatINRCompact(y.net_income)}`}
+                    />
+                  </div>
+                  <span className="font-mono text-[10px] text-forest-800/60">{y.fy}</span>
+                  <span className="font-mono text-[10px] text-forest-900">{formatINRCompact(y.net_income)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-forest-800/55">
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-forest-900/20" /> Revenue</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-brand-500" /> Net profit</span>
+              {financials.pe_median_history != null && <span>Past P/E median {formatRatio(financials.pe_median_history, 1)}</span>}
+              {peers?.pe_median != null && <span>Peer P/E median {formatRatio(peers.pe_median, 1)}</span>}
+            </div>
+          </div>
+        )}
+      </Shell>
+    </>
   );
 }
 
@@ -247,6 +381,8 @@ function GoalCard({ d }: { d: GoalData }) {
 /** Renders the structured result of a tool, or nothing for tools without a card (news → sources). */
 export function DataCard({ data }: { data: ToolData }) {
   switch (data.kind) {
+    case "report":
+      return <ReportCard r={data} />;
     case "stock":
       return <StockCard d={data} />;
     case "compare":

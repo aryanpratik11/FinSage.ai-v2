@@ -82,6 +82,12 @@
     "m01": "How is the Indian stock market doing today?",
     "m02": "Why are FIIs selling Indian stocks?",
     "m03": "What's the latest news on Infosys?",
-    "o01": "Write me a poem about cricket"
-  }
+    "o01": "Write me a poem about cricket",
+    "s11": "Is TCS cheap compared to its own history and peers?",
+    "k05": "How much tax do I pay on short-term gains from selling shares?",
+    "k06": "Old vs new tax regime - which should a salaried person pick?"
+  },
+  "s11": "",
+  "k05": "",
+  "k06": ""
 }

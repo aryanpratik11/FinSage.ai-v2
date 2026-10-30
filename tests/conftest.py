@@ -95,5 +95,8 @@ def fake_snapshot(monkeypatch):
             "sources": [],
         }
 
+    from backend.tools import analysis
+
     monkeypatch.setattr(market, "get_stock_snapshot", snapshot)
+    monkeypatch.setattr(analysis, "get_stock_report", snapshot)  # a plain snapshot is a valid report for an index
     return snapshot

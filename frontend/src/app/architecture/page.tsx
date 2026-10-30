@@ -44,7 +44,7 @@ const STACK = [
   { layer: "Backend", items: ["Python 3.12", "FastAPI", "LangGraph", "LangChain (OpenAI client)"] },
   { layer: "Models", items: ["Groq · Qwen3.8 27B", "Groq · GPT-OSS 120B", "Google · Gemini Flash"] },
   { layer: "Data", items: ["yfinance", "mfapi.in (AMFI)", "feedparser (RSS)", "NSE equity list"] },
-  { layer: "Quality & ops", items: ["pytest (50 tests)", "41-question eval set", "ruff", "Docker", "Render"] },
+  { layer: "Quality & ops", items: ["pytest (69 tests)", "44-question eval set", "ruff", "Docker", "Render"] },
 ];
 
 const EVAL = [
@@ -87,7 +87,7 @@ export default function ArchitecturePage() {
             </p>
             <dl className="mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
               {[
-                ["7", "data tools"],
+                ["9", "data tools"],
                 ["2,600+", "NSE listings understood"],
                 ["3", "AI models in the fallback chain"],
                 ["₹0", "to run on free tiers"],
@@ -275,7 +275,8 @@ export default function ArchitecturePage() {
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-amber-900/80">
                   <li>• Yahoo Finance data can lag or be rate-limited; when a lookup fails, FinSage says so.</li>
                   <li>• Free AI tiers cap how many answers per minute the site can give.</li>
-                  <li>• Tax rules and general concepts still come from the model&apos;s own knowledge.</li>
+                  <li>• Tax rules come from a reviewed reference (Budgets 2024–25); later Budget changes need a manual update.</li>
+                  <li>• The scorecard is a simple rule-based screen — one-off gains or mergers can skew multi-year growth.</li>
                   <li>• FinSage is an educational tool, not a SEBI-registered investment adviser.</li>
                 </ul>
               </div>
@@ -284,10 +285,10 @@ export default function ArchitecturePage() {
                   <Rocket className="h-4 w-4" /> What&apos;s next
                 </p>
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-brand-900/80">
-                  <li className="flex gap-2"><ListChecks className="mt-1 h-4 w-4 shrink-0" /> Quarterly results trend and valuation vs. history and peers</li>
-                  <li className="flex gap-2"><ShieldCheck className="mt-1 h-4 w-4 shrink-0" /> A consistent stock scorecard: valuation, growth, quality, momentum, red flags</li>
                   <li className="flex gap-2"><Zap className="mt-1 h-4 w-4 shrink-0" /> Company-specific news and official NSE filings</li>
-                  <li className="flex gap-2"><Lightbulb className="mt-1 h-4 w-4 shrink-0" /> A dated knowledge base for Indian tax rules</li>
+                  <li className="flex gap-2"><ListChecks className="mt-1 h-4 w-4 shrink-0" /> Mutual funds vs. their category: rolling returns, drawdowns, expense ratios</li>
+                  <li className="flex gap-2"><ShieldCheck className="mt-1 h-4 w-4 shrink-0" /> Promoter holding and pledge data in the scorecard</li>
+                  <li className="flex gap-2"><Lightbulb className="mt-1 h-4 w-4 shrink-0" /> Portfolio upload (CAS statement) for answers about your own holdings</li>
                 </ul>
               </div>
             </div>

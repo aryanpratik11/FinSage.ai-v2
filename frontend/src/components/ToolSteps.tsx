@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, Check, Landmark, Loader2, Newspaper, PiggyBank, Scale, Target, X } from "lucide-react";
+import { BarChart3, Calculator, Check, ClipboardList, Landmark, Loader2, Newspaper, PiggyBank, Receipt, Scale, Target, X } from "lucide-react";
 
 export interface Step {
   id: string;
@@ -16,6 +16,8 @@ const TOOLS: Record<string, { icon: typeof BarChart3; label: (i: Record<string, 
   get_mutual_fund: { icon: PiggyBank, label: (i) => `AMFI data for ${i.name_or_code}` },
   investment_projection: { icon: Calculator, label: (i) => `Projecting ${i.mode === "lumpsum" ? "lumpsum" : "SIP"} growth` },
   required_monthly_sip: { icon: Target, label: () => "Calculating the SIP for your goal" },
+  get_stock_report: { icon: ClipboardList, label: (i) => `Analysing ${i.name_or_symbol}: results, valuation, peers` },
+  get_tax_rules: { icon: Receipt, label: () => "Checking current Indian tax rules" },
 };
 
 export function ToolSteps({ steps }: { steps: Step[] }) {

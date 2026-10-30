@@ -21,6 +21,11 @@ export interface StockData {
   high_52w: number | null;
   low_52w: number | null;
   return_1y_pct: number | null;
+  price_return_1y_pct?: number | null;
+  vs_dma50_pct?: number | null;
+  vs_dma200_pct?: number | null;
+  from_52w_high_pct?: number | null;
+  volatility_pct?: number | null;
   market_cap: number | null;
   pe: number | null;
   pb: number | null;
@@ -29,6 +34,38 @@ export interface StockData {
   dividend_yield_pct: number | null;
   as_of: string;
   chart: [string, number][];
+  sources: Source[];
+}
+
+export interface ScorecardPillar {
+  name: "valuation" | "growth" | "quality" | "momentum";
+  tone: "good" | "neutral" | "bad" | "na";
+  label: string;
+  points: string[];
+}
+
+export interface ReportData {
+  kind: "report";
+  symbol: string;
+  snapshot: StockData;
+  financials: {
+    annual: { fy: string; revenue: number; net_income: number; net_margin_pct: number }[];
+    revenue_cagr_pct?: number | null;
+    profit_cagr_pct?: number | null;
+    pe_history?: number[];
+    pe_median_history?: number;
+  };
+  peers: { sector: string; symbols: string[]; pe_median: number | null } | null;
+  scorecard: { pillars: ScorecardPillar[]; red_flags: string[]; positives: number; negatives: number };
+  sources: Source[];
+}
+
+export interface TaxData {
+  kind: "tax";
+  topic: string;
+  as_of: string;
+  reviewed: string;
+  sections: { title: string; text: string }[];
   sources: Source[];
 }
 
@@ -104,6 +141,8 @@ export type ToolData =
   | ProjectionData
   | GoalData
   | NewsData
+  | ReportData
+  | TaxData
   | { kind: "error"; message: string };
 
 export type StreamEvent =

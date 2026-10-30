@@ -13,14 +13,17 @@ def names(calls):
 @pytest.mark.parametrize(
     "query,expected",
     [
-        ("Should I invest in TCS right now?", ["get_stock_snapshot", "search_news"]),
+        ("Should I invest in TCS right now?", ["get_stock_report", "search_news"]),
+        ("How is the market today?", ["get_stock_snapshot", "search_news"]),
         ("Which banking stocks look strongest this quarter?", ["list_sector_stocks", "search_news"]),
         ("Compare Infosys and Wipro", ["compare_stocks", "search_news"]),
         ("How much SIP do I need to build ₹1 crore in 20 years?", ["required_monthly_sip"]),
         ("I have 5 lakh lumpsum for 10 years, what will it become at 11%?", ["investment_projection"]),
         ("Parag Parikh flexi cap fund returns", ["get_mutual_fund"]),
         ("best large cap mutual fund for SIP", []),
-        ("What is LTCG tax on equity?", []),
+        ("What is LTCG tax on equity?", ["get_tax_rules"]),
+        ("Can I save tax with ELSS?", ["get_tax_rules"]),
+        ("What is an index fund?", []),
     ],
 )
 def test_router_plans(query, expected):
@@ -103,7 +106,7 @@ async def test_guided_graph_feeds_data_to_model(scripted, fake_snapshot, no_news
     events = await collect(runner.Engine(build_guided_graph(model), "guided", ["fake"]))
 
     tools = [e["tool"] for e in events if e["type"] == "tool_end"]
-    assert sorted(tools) == ["get_stock_snapshot", "search_news"]
+    assert sorted(tools) == ["get_stock_report", "search_news"]
     assert "".join(e["text"] for e in events if e["type"] == "token").strip() == "TCS looks fairly valued."
 
 
@@ -120,7 +123,8 @@ async def test_tool_errors_are_reported_not_raised(scripted, monkeypatch):
             AIMessage("I couldn't find that company."),
         ]
     )
-    events = await collect(runner.Engine(build_tools_graph(model, model, TOOLS, 3), "tools", ["fake"]))
+    graph = build_tools_graph(model, model, TOOLS, 3)
+    events = await collect(runner.Engine(graph, "tools", ["fake"]), "Tell me about XYZ")  # no prefetch for unknowns
     tool_end = next(e for e in events if e["type"] == "tool_end")
     assert tool_end["ok"] is False and "XYZ" in tool_end["data"]["message"]
     assert events[-1]["type"] == "done"

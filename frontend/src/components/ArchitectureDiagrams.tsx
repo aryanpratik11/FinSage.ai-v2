@@ -13,6 +13,8 @@ import {
   Newspaper,
   PiggyBank,
   Radio,
+  ClipboardList,
+  Receipt,
   Route,
   Search,
   Server,
@@ -195,8 +197,8 @@ const STEPS = [
   {
     icon: BarChart3,
     title: "Fetch first",
-    body: "Price, valuation, fundamentals and today’s headlines are fetched in parallel before the model writes a word.",
-    file: "market.py · news.py",
+    body: "Price and trend, four years of results, P/E against its own history and sector peers, a rule-based scorecard and today’s headlines — all fetched in parallel before the model writes a word.",
+    file: "analysis.py · news.py",
   },
   {
     icon: BrainCircuit,
@@ -405,5 +407,7 @@ export const DATA_SOURCES = [
   { icon: Newspaper, name: "Market news", source: "Moneycontrol, ET, Mint, BS, CNBC-TV18 +3", detail: "Headlines matched to the company, sector or topic", fresh: "refreshed 10 min" },
   { icon: Landmark, name: "Company names", source: "NSE equity list", detail: "“HDFC Life”, “L&T”, “Zomato” → the right NSE symbol", fresh: "bundled" },
   { icon: Calculator, name: "Calculators", source: "Python", detail: "SIP, lumpsum and goal maths — the model never does arithmetic", fresh: "exact" },
+  { icon: ClipboardList, name: "Company financials", source: "Yahoo Finance statements", detail: "4 years of revenue and profit, recent quarters, P/E vs own history and sector peers → scorecard", fresh: "cached 12 h" },
+  { icon: Receipt, name: "Tax rules", source: "Reviewed reference (Budgets 2024–25)", detail: "LTCG/STCG, slabs and regimes, 80C, dividends — dated, linked to incometax.gov.in", fresh: "reviewed Oct 2026" },
   { icon: Route, name: "Sector baskets", source: "Curated large caps", detail: "Banking, IT, pharma, auto, FMCG, energy and 7 more", fresh: "validated at start" },
 ];

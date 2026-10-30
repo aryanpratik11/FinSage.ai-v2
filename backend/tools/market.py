@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import math
 import re
 
 import yfinance as yf
@@ -61,6 +62,44 @@ def sector_symbols(sector: str) -> list[str]:
     return [s for s in SECTORS.get(sector.lower().strip(), []) if s in known]
 
 
+def technicals(closes, adj_closes=None) -> dict:
+    """Trend and risk measures from ~1 year of daily closes (pandas Series, oldest first).
+
+    Returns use dividend-adjusted closes when available (total return); moving averages use plain closes.
+    """
+    closes = closes.dropna()
+    adj = adj_closes.dropna() if adj_closes is not None else closes
+    if len(closes) < 2:
+        return {}
+    last, adj_last = float(closes.iloc[-1]), float(adj.iloc[-1])
+
+    def ret(series, days):
+        if len(series) <= days:
+            return None
+        then = float(series.iloc[-days - 1])
+        return round((float(series.iloc[-1]) / then - 1) * 100, 2) if then else None
+
+    def dma(n):
+        return round(float(closes.iloc[-n:].mean()), 2) if len(closes) >= n else None
+
+    dma50, dma200 = dma(50), dma(200)
+    daily = adj.pct_change().dropna()
+    running_max = adj.cummax()
+    return {
+        "return_1y_pct": round((adj_last / float(adj.iloc[0]) - 1) * 100, 2),
+        "price_return_1y_pct": round((last / float(closes.iloc[0]) - 1) * 100, 2),
+        "return_3m_pct": ret(adj, 63),
+        "return_6m_pct": ret(adj, 126),
+        "dma50": dma50,
+        "dma200": dma200,
+        "vs_dma50_pct": round((last / dma50 - 1) * 100, 2) if dma50 else None,
+        "vs_dma200_pct": round((last / dma200 - 1) * 100, 2) if dma200 else None,
+        "from_52w_high_pct": round((last / float(closes.max()) - 1) * 100, 2),
+        "volatility_pct": round(float(daily.std()) * math.sqrt(252) * 100, 1) if len(daily) > 20 else None,
+        "max_drawdown_pct": round(float(((adj / running_max) - 1).min()) * 100, 2),
+    }
+
+
 def _resolve_one(name_or_symbol: str) -> symbols.Listing:
     exact = symbols.lookup(name_or_symbol)
     if exact:
@@ -91,7 +130,7 @@ def _fetch_sync(listing: symbols.Listing) -> dict:
         if prev is None and len(closes) > 1:
             prev = float(closes.iloc[-2])
         change = price - prev if prev else None
-        first = float(closes.iloc[0])
+        trend = technicals(closes, hist["Adj Close"] if "Adj Close" in hist else None)
 
         roe, de = fmt.num(info.get("returnOnEquity")), fmt.num(info.get("debtToEquity"))
         margin, rev_growth = fmt.num(info.get("profitMargins")), fmt.num(info.get("revenueGrowth"))
@@ -113,7 +152,7 @@ def _fetch_sync(listing: symbols.Listing) -> dict:
             "day_low": fmt.num(info.get("dayLow")),
             "high_52w": fmt.num(info.get("fiftyTwoWeekHigh")) or round(float(hist["High"].max()), 2),
             "low_52w": fmt.num(info.get("fiftyTwoWeekLow")) or round(float(hist["Low"].min()), 2),
-            "return_1y_pct": round((last / first - 1) * 100, 2) if first else None,
+            **trend,
             "market_cap": fmt.num(info.get("marketCap")),
             "pe": fmt.num(info.get("trailingPE")),
             "forward_pe": fmt.num(info.get("forwardPE")),
@@ -154,10 +193,16 @@ def snapshot_text(d: dict) -> str:
     unit = "" if is_index else "₹"
     lines = [
         f"{d['name']} ({d['symbol']}, {d['exchange']}) as of {d['as_of']}",
-        f"Price: {unit}{fmt.indian_grouping(d['price'], 2)} ({fmt.pct(d.get('change_pct'), 2, signed=True)} today); "
-        f"1-year return: {fmt.pct(d.get('return_1y_pct'), 1, signed=True)}",
+        f"Price: {unit}{fmt.indian_grouping(d['price'], 2)} ({fmt.pct(d.get('change_pct'), 2, signed=True)} today)",
+        f"Returns incl. dividends: 3M {fmt.pct(d.get('return_3m_pct'), 1, signed=True)}, "
+        f"6M {fmt.pct(d.get('return_6m_pct'), 1, signed=True)}, 1Y {fmt.pct(d.get('return_1y_pct'), 1, signed=True)} "
+        f"(1Y price only {fmt.pct(d.get('price_return_1y_pct'), 1, signed=True)})",
         f"52-week range: {unit}{fmt.indian_grouping(d['low_52w'] or 0, 2)} – "
-        f"{unit}{fmt.indian_grouping(d['high_52w'] or 0, 2)}",
+        f"{unit}{fmt.indian_grouping(d['high_52w'] or 0, 2)} ({fmt.pct(d.get('from_52w_high_pct'), 1, signed=True)} "
+        "from the high)",
+        f"Trend: {fmt.pct(d.get('vs_dma50_pct'), 1, signed=True)} vs 50-day average, "
+        f"{fmt.pct(d.get('vs_dma200_pct'), 1, signed=True)} vs 200-day average; "
+        f"volatility {fmt.pct(d.get('volatility_pct'))} a year; max drawdown {fmt.pct(d.get('max_drawdown_pct'), 1)}",
     ]
     if not is_index:
         lines += [

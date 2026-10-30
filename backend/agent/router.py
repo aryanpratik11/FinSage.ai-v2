@@ -33,6 +33,11 @@ FOLLOW_UP_RE = re.compile(
     r"\b(it|its|it's|they|them|their|this stock|that stock|this company|that company|this one|what about|how about)\b",
     re.I,
 )
+TAX_RE = re.compile(
+    r"\b(tax|taxed|taxes|taxation|ltcg|stcg|capital gains?|80c|80d|80ccd|tds|indexation|tax regime|slab|"
+    r"tax[- ]saving|tax[- ]harvest\w*|itr|advance tax)\b",
+    re.I,
+)
 NEWSY_RE = re.compile(
     r"\b(market|markets|rbi|repo|inflation|economy|gold|silver|crude|rupee|dollar|fii|fiis|dii|ipo|ipos|budget|gdp|"
     r"fed|rally|crash|fall|falling|news|latest|today|this week|outlook|tariff|tariffs)\b",
@@ -94,6 +99,9 @@ def plan(query: str, previous_user_messages: list[str] | None = None) -> list[di
     q = query.strip()
     calls = _calculator_calls(q)
 
+    if TAX_RE.search(q):
+        return [*calls, _call("get_tax_rules", topic=q)]
+
     if FUND_RE.search(q) and not re.search(r"\b(stock|stocks|share|shares)\b", q, re.I):
         name = _fund_query(q)
         if name:
@@ -108,7 +116,8 @@ def plan(query: str, previous_user_messages: list[str] | None = None) -> list[di
     sector = None if companies else market.detect_sector(q)
     if len(companies) == 1:
         listing = symbols.lookup(companies[0])
-        calls.append(_call("get_stock_snapshot", name_or_symbol=companies[0]))
+        tool = "get_stock_snapshot" if listing.is_index else "get_stock_report"
+        calls.append(_call(tool, name_or_symbol=companies[0]))
         calls.append(_call("search_news", query=q if listing.is_index else symbols.display_name(listing)))
     elif companies:
         calls.append(_call("compare_stocks", names_or_symbols=companies))

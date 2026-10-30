@@ -1,27 +1,24 @@
 [
-  {"id": "s01", "category": "stock", "question": "Should I invest in TCS right now?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["risk"], ["p/e", "valuation"]], "disclaimer": true},
-  {"id": "s02", "category": "stock", "question": "Is Reliance Industries overvalued at current levels?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["p/e", "valuation"]], "disclaimer": true},
-  {"id": "s03", "category": "stock", "question": "What's the outlook for HDFC Bank after its fall this year?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["risk"]], "disclaimer": true},
-  {"id": "s04", "category": "stock", "question": "Is Infosys a good long term investment?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["risk"]], "disclaimer": true},
-  {"id": "s05", "category": "stock", "question": "Tell me about Bharat Electronics", "expect_tools": ["get_stock_snapshot"], "must_mention": [["defence", "defense"]], "disclaimer": false},
-  {"id": "s06", "category": "stock", "question": "Should I buy Zomato shares?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["eternal", "zomato"], ["risk"]], "disclaimer": true},
-  {"id": "s07", "category": "stock", "question": "Is ITC a good dividend stock?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["dividend"]], "disclaimer": true},
-  {"id": "s08", "category": "stock", "question": "How has Tata Steel performed over the last year?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["year", "1y", "12 month"]], "disclaimer": false},
-  {"id": "s09", "category": "stock", "question": "Is Suzlon Energy too risky?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["risk", "volatil"]], "disclaimer": true},
-  {"id": "s10", "category": "stock", "question": "What is the debt situation at Adani Enterprises?", "expect_tools": ["get_stock_snapshot"], "must_mention": [["debt"]], "disclaimer": false},
-
+  {"id": "s01", "category": "stock", "question": "Should I invest in TCS right now?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["risk"], ["p/e", "valuation"]], "disclaimer": true},
+  {"id": "s02", "category": "stock", "question": "Is Reliance Industries overvalued at current levels?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["p/e", "valuation"]], "disclaimer": true},
+  {"id": "s03", "category": "stock", "question": "What's the outlook for HDFC Bank after its fall this year?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["risk"]], "disclaimer": true},
+  {"id": "s04", "category": "stock", "question": "Is Infosys a good long term investment?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["risk"]], "disclaimer": true},
+  {"id": "s05", "category": "stock", "question": "Tell me about Bharat Electronics", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["defence", "defense"]], "disclaimer": false},
+  {"id": "s06", "category": "stock", "question": "Should I buy Zomato shares?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["eternal", "zomato"], ["risk"]], "disclaimer": true},
+  {"id": "s07", "category": "stock", "question": "Is ITC a good dividend stock?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["dividend"]], "disclaimer": true},
+  {"id": "s08", "category": "stock", "question": "How has Tata Steel performed over the last year?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["year", "1y", "12 month"]], "disclaimer": false},
+  {"id": "s09", "category": "stock", "question": "Is Suzlon Energy too risky?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["risk", "volatil"]], "disclaimer": true},
+  {"id": "s10", "category": "stock", "question": "What is the debt situation at Adani Enterprises?", "expect_tools": ["get_stock_report", "get_stock_snapshot"], "must_mention": [["debt"]], "disclaimer": false},
   {"id": "c01", "category": "comparison", "question": "Compare Infosys and Wipro as long-term investments", "expect_tools": ["compare_stocks"], "must_mention": [["infosys", "infy"], ["wipro"]], "disclaimer": true},
   {"id": "c02", "category": "comparison", "question": "HDFC Bank vs ICICI Bank - which is better?", "expect_tools": ["compare_stocks"], "must_mention": [["hdfc"], ["icici"]], "disclaimer": true},
   {"id": "c03", "category": "comparison", "question": "Maruti or M&M for the next 3 years?", "expect_tools": ["compare_stocks"], "must_mention": [["maruti"], ["m&m", "mahindra"]], "disclaimer": true},
   {"id": "c04", "category": "comparison", "question": "Compare TCS, Infosys and HCL Tech on valuation", "expect_tools": ["compare_stocks"], "must_mention": [["p/e"]], "disclaimer": false},
   {"id": "c05", "category": "comparison", "question": "SBI vs Bank of Baroda", "expect_tools": ["compare_stocks"], "must_mention": [["sbi", "state bank"], ["baroda"]], "disclaimer": false},
-
   {"id": "x01", "category": "sector", "question": "Which banking stocks look strongest this quarter?", "expect_tools": ["list_sector_stocks", "compare_stocks"], "must_mention": [["roe", "p/e"]], "disclaimer": true},
   {"id": "x02", "category": "sector", "question": "How is the IT sector doing?", "expect_tools": ["list_sector_stocks", "compare_stocks"], "must_mention": [["tcs", "infosys", "infy"]], "disclaimer": false},
   {"id": "x03", "category": "sector", "question": "Best pharma stocks to watch", "expect_tools": ["list_sector_stocks", "compare_stocks"], "must_mention": [["sun pharma", "sunpharma", "cipla", "dr reddy", "drreddy"]], "disclaimer": true},
   {"id": "x04", "category": "sector", "question": "Are FMCG stocks a safe bet right now?", "expect_tools": ["list_sector_stocks", "compare_stocks"], "must_mention": [["risk"]], "disclaimer": true},
   {"id": "x05", "category": "sector", "question": "What's happening with defence stocks?", "expect_tools": ["list_sector_stocks", "compare_stocks", "search_news"], "must_mention": [["hal", "bel", "bharat electronics"]], "disclaimer": false},
-
   {"id": "f01", "category": "fund", "question": "How has Parag Parikh Flexi Cap performed?", "expect_tools": ["get_mutual_fund"], "must_mention": [["nav"], ["cagr", "return"]], "disclaimer": false},
   {"id": "f02", "category": "fund", "question": "Is Nippon India Small Cap Fund good for a 10 year SIP?", "expect_tools": ["get_mutual_fund"], "must_mention": [["risk", "volatil"]], "disclaimer": true},
   {"id": "f03", "category": "fund", "question": "HDFC Mid Cap fund returns", "expect_tools": ["get_mutual_fund"], "must_mention": [["cagr", "return"]], "disclaimer": false},
@@ -30,21 +27,20 @@
   {"id": "f06", "category": "fund", "question": "Is Quant Small Cap fund worth investing in?", "expect_tools": ["get_mutual_fund"], "must_mention": [["risk", "volatil"]], "disclaimer": true},
   {"id": "f07", "category": "fund", "question": "What is the NAV of Mirae Asset Large Cap fund?", "expect_tools": ["get_mutual_fund"], "must_mention": [["nav"]], "disclaimer": false},
   {"id": "f08", "category": "fund", "question": "Should I pick the direct or regular plan of Parag Parikh Flexi Cap?", "expect_tools": ["get_mutual_fund"], "must_mention": [["direct"], ["expense", "cost", "commission"]], "disclaimer": false},
-
   {"id": "g01", "category": "calculator", "question": "How much SIP do I need to build ₹1 crore in 20 years?", "expect_tools": ["required_monthly_sip"], "must_mention": [["10,009", "10009"]], "disclaimer": false},
   {"id": "g02", "category": "calculator", "question": "If I invest ₹10,000 every month for 15 years at 12%, how much will I have?", "expect_tools": ["investment_projection"], "must_mention": [["50.4", "50,45"]], "disclaimer": false},
   {"id": "g03", "category": "calculator", "question": "I have 5 lakh lumpsum for 10 years, what will it become at 11%?", "expect_tools": ["investment_projection"], "must_mention": [["14.2", "14,19", "14.19"]], "disclaimer": false},
   {"id": "g04", "category": "calculator", "question": "How much should I invest monthly to retire with 3 crore in 25 years?", "expect_tools": ["required_monthly_sip"], "must_mention": [["month"]], "disclaimer": false},
   {"id": "g05", "category": "calculator", "question": "What will a ₹5,000 per month SIP become in 10 years?", "expect_tools": ["investment_projection"], "must_mention": [["11.6", "11,61", "11.62"]], "disclaimer": false},
-
   {"id": "k01", "category": "concept", "question": "What is the difference between direct and regular mutual funds?", "expect_tools": [], "must_mention": [["expense", "commission"]], "disclaimer": false},
-  {"id": "k02", "category": "concept", "question": "How is long-term capital gains on equity taxed in India?", "expect_tools": [], "must_mention": [["ltcg", "long-term capital gain"]], "disclaimer": false},
+  {"id": "k02", "category": "concept", "question": "How is long-term capital gains on equity taxed in India?", "expect_tools": ["get_tax_rules"], "must_mention": [["ltcg", "long-term capital gain"], ["12.5"], ["1.25 lakh", "1,25,000"]], "disclaimer": false},
   {"id": "k03", "category": "concept", "question": "What is a P/E ratio and how should I use it?", "expect_tools": [], "must_mention": [["earnings"]], "disclaimer": false},
   {"id": "k04", "category": "concept", "question": "Should a beginner start with index funds?", "expect_tools": [], "must_mention": [["index"]], "disclaimer": false},
-
   {"id": "m01", "category": "market", "question": "How is the Indian stock market doing today?", "expect_tools": ["get_stock_snapshot", "search_news"], "must_mention": [["nifty", "sensex"]], "disclaimer": false},
   {"id": "m02", "category": "market", "question": "Why are FIIs selling Indian stocks?", "expect_tools": ["search_news"], "must_mention": [["fii", "foreign"]], "disclaimer": false},
   {"id": "m03", "category": "market", "question": "What's the latest news on Infosys?", "expect_tools": ["search_news"], "must_mention": [["infosys"]], "disclaimer": false},
-
-  {"id": "o01", "category": "off-topic", "question": "Write me a poem about cricket", "expect_tools": [], "must_mention": [["financ", "invest", "market", "money"]], "disclaimer": false}
+  {"id": "o01", "category": "off-topic", "question": "Write me a poem about cricket", "expect_tools": [], "must_mention": [["financ", "invest", "market", "money"]], "disclaimer": false},
+  {"id": "s11", "category": "stock", "question": "Is TCS cheap compared to its own history and peers?", "expect_tools": ["get_stock_report"], "must_mention": [["median", "average", "history"], ["peer"]], "disclaimer": true},
+  {"id": "k05", "category": "concept", "question": "How much tax do I pay on short-term gains from selling shares?", "expect_tools": ["get_tax_rules"], "must_mention": [["20%", "20 %"], ["12 months", "one year", "1 year"]], "disclaimer": false},
+  {"id": "k06", "category": "concept", "question": "Old vs new tax regime - which should a salaried person pick?", "expect_tools": ["get_tax_rules"], "must_mention": [["12 lakh", "12,00,000", "₹12"], ["deduction"]], "disclaimer": false}
 ]

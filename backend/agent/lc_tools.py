@@ -5,7 +5,7 @@ from typing import Literal
 
 from langchain_core.tools import tool
 
-from backend.tools import calc, funds, market, news
+from backend.tools import analysis, calc, funds, market, news, tax
 
 log = logging.getLogger(__name__)
 
@@ -33,6 +33,31 @@ def _error(e: Exception) -> tuple[str, dict]:
         log.exception("Tool failed")
         msg = "The data source didn't respond. Try again in a moment."
     return f"Tool error: {msg}", {"kind": "error", "message": msg}
+
+
+@tool(response_format="content_and_artifact")
+async def get_stock_report(name_or_symbol: str) -> tuple[str, dict]:
+    """Full analysis of ONE NSE/BSE company: live price and returns, trend (50/200-day averages, distance from the
+    52-week high, volatility), 4 years of revenue and profit, recent quarters, P/E against its own history and its
+    sector peers, and a rule-based scorecard (valuation, growth, quality, momentum, red flags). Prefer this for any
+    question about a single company. Accepts a company name ("Infosys") or NSE symbol ("INFY")."""
+    try:
+        d = await analysis.get_stock_report(name_or_symbol)
+        return analysis.report_text(d), d
+    except Exception as e:
+        return _error(e)
+
+
+@tool(response_format="content_and_artifact")
+async def get_tax_rules(topic: str) -> tuple[str, dict]:
+    """Current Indian tax rules for investors from a reviewed, dated reference: capital gains on shares and mutual
+    funds (LTCG/STCG), losses, debt funds, dividends, tax regimes and slabs, 80C/ELSS/NPS/PPF, trading income.
+    Use for any tax question instead of answering from memory. Pass the user's question or topic."""
+    try:
+        d = tax.get_tax_rules(topic)
+        return tax.tax_text(d), d
+    except Exception as e:
+        return _error(e)
 
 
 @tool(response_format="content_and_artifact")
@@ -117,6 +142,7 @@ async def required_monthly_sip(target_amount: float, years: int, annual_return_p
 
 
 TOOLS = [
+    get_stock_report,
     get_stock_snapshot,
     compare_stocks,
     list_sector_stocks,
@@ -124,5 +150,6 @@ TOOLS = [
     get_mutual_fund,
     investment_projection,
     required_monthly_sip,
+    get_tax_rules,
 ]
 TOOLS_BY_NAME = {t.name: t for t in TOOLS}
