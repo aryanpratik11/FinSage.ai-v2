@@ -1,0 +1,12 @@
+# FinSage backend (runtime). Python 3.11+
+fastapi~=0.143
+uvicorn[standard]~=0.54
+pydantic~=2.13
+python-dotenv~=1.2
+httpx~=0.28
+yfinance~=1.7
+pandas>=2.2,<4
+feedparser~=6.0
+langgraph~=1.2
+langchain-core~=1.7
+langchain-openai~=1.7

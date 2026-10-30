@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Deep forest greens for dark surfaces */
+  --color-forest-950: #03140d;
+  --color-forest-900: #062418;
+  --color-forest-800: #0a3524;
+  --color-forest-700: #0f4a33;
+
+  /* Brand green */
+  --color-brand-50: #ecfdf3;
+  --color-brand-100: #d1fae1;
+  --color-brand-200: #a6f4c8;
+  --color-brand-300: #6ce8a8;
+  --color-brand-400: #34d384;
+  --color-brand-500: #12b76a;
+  --color-brand-600: #079455;
+  --color-brand-700: #067647;
+  --color-brand-800: #085d3a;
+  --color-brand-900: #074d31;
+
+  /* Warm accent, used sparingly for the rupee mark */
+  --color-gold-300: #fcd98a;
+  --color-gold-400: #f8c35b;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-fade-up: fade-up 0.5s ease-out both;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[#f6faf7] text-forest-950 antialiased;
+  }
+  ::selection {
+    @apply bg-brand-200 text-forest-950;
+  }
+}
+
+/* Subtle grid used behind hero sections */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Model output */
+.prose-fin p { @apply my-3 leading-7 first:mt-0 last:mb-0; }
+.prose-fin strong { @apply font-semibold text-forest-950; }
+.prose-fin ul { @apply my-3 list-disc space-y-1.5 pl-5 marker:text-brand-500; }
+.prose-fin ol { @apply my-3 list-decimal space-y-1.5 pl-5 marker:text-brand-600; }
+.prose-fin h1, .prose-fin h2, .prose-fin h3 { @apply mt-5 mb-2 font-semibold text-forest-950; }
+.prose-fin code { @apply rounded bg-brand-50 px-1 py-0.5 font-mono text-[0.85em] text-brand-800; }
+.prose-fin a { @apply font-medium text-brand-700 underline underline-offset-2; }
+.prose-fin table { @apply my-4 block w-full overflow-x-auto border-collapse text-sm; }
+.prose-fin thead { @apply bg-brand-50/60; }
+.prose-fin th { @apply border-b border-brand-100 px-3 py-2 text-left text-xs font-semibold whitespace-nowrap text-forest-900; }
+.prose-fin td { @apply border-b border-forest-900/5 px-3 py-2 align-top; }
+.prose-fin tr:last-child td { @apply border-b-0; }
+.prose-fin hr { @apply my-4 border-forest-900/10; }
+
+input[type="range"] {
+  @apply h-1.5 w-full cursor-pointer appearance-none rounded-full bg-brand-100;
+}
+input[type="range"]::-webkit-slider-thumb {
+  @apply h-5 w-5 appearance-none rounded-full border-4 border-white bg-brand-600 shadow-md;
+}
+input[type="range"]::-moz-range-thumb {
+  @apply h-4 w-4 rounded-full border-4 border-white bg-brand-600 shadow-md;
+}

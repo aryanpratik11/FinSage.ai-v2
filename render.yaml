@@ -1,0 +1,35 @@
+# Render Blueprint: deploys the API (Docker) and the website (Next.js) on the free plan.
+# Render dashboard → New → Blueprint → pick this repo. You'll be asked for the API keys.
+services:
+  - type: web
+    name: finsage-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      # The website's address. Covers the default name and Render's suffixed variants (finsage-web-xxxx).
+      - key: ALLOWED_ORIGIN_REGEX
+        value: https://finsage-web(-[a-z0-9]+)?\.onrender\.com
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:3000
+
+  - type: web
+    name: finsage-web
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # The API's public URL. If Render gives the API a different address, change this and redeploy the website.
+      - key: NEXT_PUBLIC_API_URL
+        value: https://finsage-api.onrender.com

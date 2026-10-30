@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Data and outputs
+data/*.pdf
+data/*.txt
+results/
+
+# Local LLM files
+wsl-llama
+models/
+*.gguf
+
+# Tooling
+.ruff_cache/
+
+# Eval runs (commit a report deliberately if you want to keep it)
+evals/results/
+evals/external/*.json
+!evals/external/*.template.json

@@ -1,0 +1,10 @@
+# Notebook experiments (RAG pipeline) — not needed by the backend
+pypdf
+chromadb
+sentence-transformers
+langchain
+numpy
+pandas
+tqdm
+matplotlib
+jupyter
