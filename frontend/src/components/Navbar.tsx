@@ -6,9 +6,10 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { href: "#features", label: "Features" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#sip-calculator", label: "SIP calculator" },
+  { href: "/#features", label: "Features" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/#sip-calculator", label: "SIP calculator" },
+  { href: "/architecture", label: "Architecture" },
 ];
 
 export function Navbar() {
