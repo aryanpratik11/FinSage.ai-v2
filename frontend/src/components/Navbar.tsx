@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { InstallButton } from "./InstallButton";
 import { Logo } from "./Logo";
 
 const LINKS = [
@@ -31,7 +32,7 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Logo dark className="h-11" />
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           {LINKS.map((l) => (
             <a key={l.href} href={l.href} className="text-sm font-medium text-white/70 transition hover:text-white">
               {l.label}
@@ -39,6 +40,7 @@ export function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
+          <InstallButton variant="nav" />
           <Link
             href="/chat"
             className="hidden items-center gap-1.5 rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-forest-950 transition hover:bg-brand-400 sm:flex"
@@ -47,7 +49,7 @@ export function Navbar() {
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="rounded-lg p-2 text-white md:hidden"
+            className="rounded-lg p-2 text-white lg:hidden"
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -55,7 +57,7 @@ export function Navbar() {
         </div>
       </nav>
       {open && (
-        <div className="space-y-1 border-t border-white/10 px-4 pb-4 md:hidden">
+        <div className="space-y-1 border-t border-white/10 px-4 pb-4 lg:hidden">
           {LINKS.map((l) => (
             <a
               key={l.href}
@@ -72,6 +74,7 @@ export function Navbar() {
           >
             Start analysing <ArrowRight className="h-4 w-4" />
           </Link>
+          <InstallButton variant="menu" />
         </div>
       )}
     </header>

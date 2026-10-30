@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUp, Calculator, Cpu, History, Landmark, Menu, PiggyBank, Plus, Square, TrendingUp, Trash2, X } from "lucide-react";
 import { Logo, SageMark } from "@/components/Logo";
 import { AssistantMessage, type AssistantMsg } from "@/components/AssistantMessage";
+import { InstallButton } from "@/components/InstallButton";
 import { streamChat, checkHealth, API_URL, type ChatTurn, type Health, type StreamEvent } from "@/lib/api";
 
 type Message = { id: string; role: "user"; text: string } | AssistantMsg;
@@ -260,7 +261,8 @@ export default function ChatPage() {
           )}
         </div>
 
-        <div className="space-y-4 border-t border-white/5 p-4">
+        <div className="space-y-2 border-t border-white/5 p-4">
+          <InstallButton variant="sidebar" />
           <Link
             href="/#sip-calculator"
             className="flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 ring-1 ring-white/5 transition hover:bg-white/[0.08]"
@@ -273,7 +275,7 @@ export default function ChatPage() {
               <span className="block text-xs text-white/45">Project your ₹ growth</span>
             </span>
           </Link>
-          <div className="px-1">
+          <div className="px-1 pt-2">
             <StatusPill health={health} />
           </div>
         </div>
@@ -286,7 +288,9 @@ export default function ChatPage() {
             <Menu className="h-5 w-5" />
           </button>
           <span className="font-semibold">FinSage</span>
-          <button onClick={newChat} className="ml-auto rounded-lg p-1.5 text-forest-900" aria-label="New research">
+          <span className="ml-auto" />
+          <InstallButton variant="icon" />
+          <button onClick={newChat} className="rounded-lg p-1.5 text-forest-900" aria-label="New research">
             <Plus className="h-5 w-5" />
           </button>
         </header>

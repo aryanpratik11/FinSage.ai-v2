@@ -20,6 +20,16 @@ Run the backend from the repo root first (see the main README).
   - data cards for stocks, comparisons, mutual funds, SIP projections and goals
   - the answer as it streams, with sources and a figure-verification badge
 
+## Installable app (PWA)
+
+- `src/app/manifest.ts` — web app manifest (opens `/chat` in its own window); icons in `public/icons/` (incl. maskable)
+- `public/sw.js` — service worker: caches static assets and serves `public/offline.html` when offline; never touches
+  API calls. Registered only in production builds, so test installing with `npm run build && npm start` or on the
+  deployed site.
+- `src/components/InstallButton.tsx` — "Install app" in the navbar, mobile menu, chat sidebar and chat header. Uses
+  the browser's native prompt on Chrome/Edge (desktop and Android); shows step-by-step instructions on iPhone/iPad
+  (Share → Add to Home Screen), Safari on Mac and Firefox. Hidden once the app is installed.
+
 ## Layout
 
 - `src/lib/api.ts` — event types and the SSE client (`streamChat`, `checkHealth`)
